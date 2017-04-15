@@ -1,1 +1,0 @@
-<p>Bienvenido {{ $user->name }} a Laravel.</p>
