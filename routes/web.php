@@ -11,6 +11,14 @@
 |
 */
 
+use App\User;
+
 Route::get('/', function () {
     return view('welcome');
+});
+
+Route::get('post', function (){
+    $users = User::all();
+
+   return view('post', compact('users'));
 });
