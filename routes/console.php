@@ -1,5 +1,6 @@
 <?php
 
+use App\User;
 use Illuminate\Foundation\Inspiring;
 
 /*
@@ -16,3 +17,12 @@ use Illuminate\Foundation\Inspiring;
 Artisan::command('inspire', function () {
     $this->comment(Inspiring::quote());
 })->describe('Display an inspiring quote');
+
+Artisan::command('attila:welcome {name=Invitado} {--back}', function ($name) {
+    if ($this->option('back')){
+        $this->info("Welcome back GabrielAttila!, {$name}");
+    }else{
+        $this->info("Welcome to GabrielAttila!, {$name}");
+    }
+})->describe('Welcome a user to our project');
+
