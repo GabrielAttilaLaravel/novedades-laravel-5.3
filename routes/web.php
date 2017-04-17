@@ -12,12 +12,18 @@
 */
 
 
+use App\User;
+
 Route::get('/', function () {
     return view('welcome');
 });
 
+Route::get('points', function (){
+    $user = User::find(1);
 
-// Route::auth(); laravel 5.2
-Auth::routes();
+    return $user->posts->avg(function ($post){
+        return $post->points;
+    });
+});
 
 Route::get('/home', 'HomeController@index');
