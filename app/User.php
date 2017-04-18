@@ -30,4 +30,27 @@ class User extends Authenticatable
     {
         return $this->hasMany(Post::class);
     }
+
+    // optenemos el administrador del sistema
+    public static function getAdmin()
+    {
+        return static::firstOrCreate([
+            'email' => 'gabrieljmorenot@gmail.com'
+        ], [
+            'name' => 'GabrieilAttila',
+            'password' => bcrypt('123123')
+        ]);
+
+        // obtenemos el primer registro y si da un error envia un error 404
+        /**$admin = static::where('email', 'gabrieljmorenot@gmail.com')->first();
+
+        if ($admin == null){
+            $admin = User::create([
+                'name' => 'GabrieilAttila',
+                'email' => 'gabrieljmorenot@gmail.com',
+                'password' => bcrypt('123123')
+            ]);
+        }
+        return $admin;**/
+    }
 }

@@ -18,6 +18,10 @@ Route::get('/', function () {
     return view('welcome');
 });
 
+Route::get('admin', function(){
+    return User::getAdmin();
+});
+
 Route::get('points', function (){
     $user = User::find(1);
 
