@@ -38,6 +38,11 @@ class User extends Authenticatable
         return $this->hasOne(UserProfile::class);
     }
 
+    public function getProfileAttribute()
+    {
+        return $this->profile()->firstOrNew([]);
+    }
+
     // optenemos el administrador del sistema
     public static function getAdmin()
     {

@@ -29,10 +29,12 @@
                                     @endif
                                 </div>
                             </div>
+                            @if($profile->avatar)
+                                <p>
+                                    <img src="{{ url('profile/avatar') }}" alt="">
+                                </p>
+                            @endif
 
-                            <p>
-                                <img src="{{ asset('storage/'.$profile->avatar) }}" alt="">
-                            </p>
 
                             <div class="form-group{{ $errors->has('avatar') ? ' has-error': '' }}">
                                 <label for="avatar" class="col-md-4 control-label">Avatar</label>
