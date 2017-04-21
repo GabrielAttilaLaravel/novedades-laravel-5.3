@@ -26,9 +26,16 @@ class User extends Authenticatable
     protected $hidden = [
         'password', 'remember_token',
     ];
+
     public function posts()
     {
         return $this->hasMany(Post::class);
+    }
+
+    public function profile()
+    {
+        // un usuario puede tener un perfil de usuario
+        return $this->hasOne(UserProfile::class);
     }
 
     // optenemos el administrador del sistema

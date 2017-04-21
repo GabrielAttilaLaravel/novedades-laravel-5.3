@@ -14,6 +14,11 @@
 
 use App\User;
 
+Route::group(['middleware' => 'auth'], function (){
+    Route::get('profile', 'ProfileController@edit');
+    Route::put('profile', 'ProfileController@update');
+});
+
 Route::get('/', function () {
     return view('welcome');
 });
@@ -29,5 +34,6 @@ Route::get('points', function (){
         return $post->points;
     });
 });
-
+// Route::auth(); laravel 5.2
+Auth::routes();
 Route::get('/home', 'HomeController@index');
