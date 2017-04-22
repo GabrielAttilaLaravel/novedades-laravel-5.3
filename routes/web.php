@@ -12,7 +12,16 @@
 */
 
 
+use App\Post;
 use App\User;
+
+// usamos php artisan vendor:publish --tag=laravel-pagination
+// para poder extraer el codigo que personalizamos del vendor
+Route::get('posts', function (){
+    $posts = Post::Paginate(5);
+
+    return view('posts', compact('posts'));
+});
 
 Route::group(['middleware' => 'auth'], function (){
     Route::get('profile', 'ProfileController@edit');
