@@ -22,6 +22,13 @@ class ProfileController extends Controller
     // php artisan storage:link
     public function update(Request $request)
     {
+        $this->validate($request, [
+            'description' => 'min:10',
+            'avatar' => [
+                'image',
+                'dimensions:max_width=200,max_height=200'
+            ]
+        ]);
         // optenemos el perfil del usuario
         $profile = auth()->user()->profile;
         $profile->fill($request->all());
@@ -29,7 +36,7 @@ class ProfileController extends Controller
         if ($request->hasFile('avatar')){
             // metodo store(): grabamos la imagen en el archivo avatars
             // metodo storeAs(): le podemos colocar el nombre del archivo
-            $profile->avatar = $request->file('avatar')->storeAs('avatars/'.auth()->id(), 'avatar.jpg');
+            $profile->avatar = $request->file('avatar')->store('avatars/'.auth()->id());
         }
 
         //pasamos el nombre del campo el archivo.
