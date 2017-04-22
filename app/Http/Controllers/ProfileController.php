@@ -2,8 +2,10 @@
 
 namespace App\Http\Controllers;
 
+use App\Post;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\File;
+use Illuminate\Validation\Rule;
 use Symfony\Component\HttpFoundation\ResponseHeaderBag;
 
 class ProfileController extends Controller
@@ -14,7 +16,9 @@ class ProfileController extends Controller
         // creamosun objeto null de user a dado caso no tenga un perfil para que no genere un error
         $profile = auth()->user()->profile;
 
-        return view('users.profile', compact('profile'));
+        $posts = Post::orderBy('title', 'ASC')->where('user_id', auth()->id())->get();
+
+        return view('users.profile', compact('profile', 'posts'));
     }
 
     // actualizamos el perfil
@@ -22,15 +26,30 @@ class ProfileController extends Controller
     // php artisan storage:link
     public function update(Request $request)
     {
-        $this->validate($request, [
-            'description' => 'min:10',
-            'avatar' => [
-                'image',
-                'dimensions:max_width=200,max_height=200'
-            ]
-        ]);
         // optenemos el perfil del usuario
         $profile = auth()->user()->profile;
+
+        $this->validate($request, [
+            'description' => 'required|min:10|max:1000',
+            // al actualizar ignoramos esta columna si es el mismo user el que la actualiza
+            'nickname' => Rule::unique('user_profiles')->ignore($profile->id),
+            //'nickname' => "unique:user_profiles,nickname,{$profile->id}",
+            'avatar' => [
+                'image',
+                Rule::dimensions()->maxWidth(200)->maxHeight(200)
+                /**Rule::dimensions([
+                    'max_width' => 200,
+                    'max_height' => 200,
+                ])**/
+                //'dimensions:max_width=200,max_height=200'
+            ],
+            // espesificamos el nombre de la tabla en donde queremos buscar y buscamos en la columna id
+            'featured_post_id' => Rule::exists('posts', 'id')
+                ->where('user_id', auth()->id())
+                ->where('points', '>=', 50)
+                //->using() callback
+        ]);
+
         $profile->fill($request->all());
         //comprobamos si el usuario esta subiendo un avatar
         if ($request->hasFile('avatar')){
