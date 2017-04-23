@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Notifications\ProfileUpdated;
 use App\Post;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\File;
@@ -45,8 +46,10 @@ class ProfileController extends Controller
             ],
             // espesificamos el nombre de la tabla en donde queremos buscar y buscamos en la columna id
             'featured_post_id' => Rule::exists('posts', 'id')
-                ->where('user_id', auth()->id())
-                ->where('points', '>=', 50)
+                ->where(function ($query) {
+                    $query->where('user_id', auth()->id())
+                          ->where('points', '>=', 50);
+                })
                 //->using() callback
         ]);
 
@@ -64,6 +67,11 @@ class ProfileController extends Controller
         // llamamos al metodo store() y espesificamos el directorio relativo a donde queremos subir el archivo
         //dd($request->file('avatar')->store('avatars'));
         $profile->save();
+
+        // cambiamos le nombre del titulo de la notificacion en app.php name='' :D
+        // enviamos la notificacion al usuario que esta conectado pasamos la clase de la notificacion
+        // pasamos como parametro el perfil del usuario
+        auth()->user()->notify(new ProfileUpdated($profile));
 
         return back();
     }

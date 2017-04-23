@@ -20,7 +20,7 @@
 
                                 <div class="col-md-6">
 
-                                    <input type="text" name="nickname" value="{{ auth()->user()->profile->nickname }}" class="form-control">
+                                    <input type="text" name="nickname" value="{{ old('nickname', auth()->user()->profile->nickname) }}" class="form-control">
 
                                     @if($errors->has('nickname'))
                                         <span class="help-block">
@@ -58,7 +58,7 @@
 
                                 <div class="col-md-6">
 
-                                    <textarea name="description" id="description" class="form-control">{{ auth()->user()->profile->description }}</textarea>
+                                    <textarea name="description" id="description" class="form-control">{{ old('description', auth()->user()->profile->description) }}</textarea>
 
                                     @if($errors->has('description'))
                                         <span class="help-block">
