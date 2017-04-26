@@ -6,17 +6,17 @@
             <div class="col-md-8 col-md-offset-2">
                 <ul class="list-group">
                     @foreach($notifications as $notification)
-                        <li class="list-group-item">
-                            <a href="{{ url("notifications/{$notification->id}") }}" @if($notification->read_at == null) style="font-weight: bold" @endif>
+                        <li class="list-group-item" @if($notification->is_new) style="font-weight: bold" @endif>
+                            <a href="{{ $notification->redirect_url }}" >
                                 {{--
                                     class_basename:
                                         Obtenemos el nombre de la clase sin su namespace
                                     strtolower:
                                         convertimos el nombre de la clase a minusculas
                                 --}}
-                                {{ trans('notifications.'.strtolower(class_basename($notification->type)), $notification->data) }}
+                                {{ $notification->description }}
                             </a>
-                            <br> {{ $notification->created_at->format('d/m/Y h:ia') }}
+                            <br> {{ $notification->date }}
                         </li>
                     @endforeach
                 </ul>

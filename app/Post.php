@@ -10,4 +10,10 @@ class Post extends Model
     {
         return $this->belongsTo(User::class);
     }
+
+    // simulamos que el post tiene 5 suscriptores
+    public function getSubscribersAttribute()
+    {
+        return User::take(5)->get();
+    }
 }

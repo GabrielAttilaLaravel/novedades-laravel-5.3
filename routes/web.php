@@ -12,10 +12,11 @@
 */
 
 
+use App\Notifications\PostComented;
 use App\User;
 use App\Post;
 use App\Notifications\Follower;
-use Illuminate\Notifications\DatabaseNotification;
+use App\DatabaseNotification;
 
 // usamos php artisan vendor:publish --tag=laravel-pagination
 // para poder extraer el codigo que personalizamos del vendor
@@ -33,6 +34,14 @@ Route::get('follow/{follower}/{followed}', function (User $follower, User $follo
     // Clase Follower:
     // le pasamos el seguidor
     Notification::send($followed, new Follower($follower));
+});
+
+Route::get('comment/{post}', function (Post $post){
+    // Write comment...
+
+    // enviamos la notificacion ej: si tenemos los subscriptores del post le enviamos que hay un nuevo
+    // comentario
+    Notification::send($post->subscribers, new PostComented($post));
 });
 
 Route::group(['middleware' => 'auth'], function (){
@@ -59,20 +68,21 @@ Route::group(['middleware' => 'auth'], function (){
     Route::get('notifications/{notification}', function (DatabaseNotification $notification){
         // abortmos a menos que el usuario conectado sea igual al usuario de la notificacion
         // y para estar 100% seguro verificamos el tipo de notificacion
-        abort_unless($notification->notifiable_id == auth()->id() && $notification->notifiable_type == 'App\User', 404);
+        abort_unless($notification->associatedTo(auth()->user()), 404);
         // markAsRead: marcmos una notificacion como leida
         $notification->markAsRead();
 
-        // dependiendo del tipo de notificacion lo enviamos a una url
-        switch ($notification->type){
-            case 'App\Notifications\Follower':
-                return redirect('profile/'.$notification->data['follower_id']);
-        }
+        // redirigimos al usuario
+        return redirect($notification->redirec_url);
     });
 
 
     Route::get('profile/{user}', function (User $user){
         dd($user);
+    });
+
+    Route::get('posts/{post}', function (Post $post){
+        dd($post);
     });
 });
 
