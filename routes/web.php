@@ -12,8 +12,10 @@
 */
 
 
-use App\Post;
 use App\User;
+use App\Post;
+use App\Notifications\Follower;
+use Illuminate\Notifications\DatabaseNotification;
 
 // usamos php artisan vendor:publish --tag=laravel-pagination
 // para poder extraer el codigo que personalizamos del vendor
@@ -23,11 +25,55 @@ Route::get('posts', function (){
     return view('posts', compact('posts'));
 });
 
+//creamos una ruta para simular la notificacion del usuario que va a seguir y el seguido
+Route::get('follow/{follower}/{followed}', function (User $follower, User $followed){
+    // metodo send():
+    // 1- enviamos el usuario al cual quiero enviarle la notificacion
+    // 2- pasamos una instancia del objeto de la notificacion
+    // Clase Follower:
+    // le pasamos el seguidor
+    Notification::send($followed, new Follower($follower));
+});
+
 Route::group(['middleware' => 'auth'], function (){
     Route::get('profile', 'ProfileController@edit');
     Route::put('profile', 'ProfileController@update');
 
     Route::get('profile/avatar', 'ProfileController@avatar');
+
+    Route::get('notifications', function (){
+        // notifications: mostramos todas las notificaciones
+        // unreadNotifications: mostramos las notificaciones no leidas
+        $notifications = auth()->user()->notifications;
+
+        return view('notifications', compact('notifications'));
+    });
+
+    Route::get('notifications/read-all', function (){
+        // obtenemos las notificaciones al usuario conectado
+        auth()->user()->notifications->markAsRead();
+        // redirigimos a la pantalla anterior
+        return back();
+    });
+
+    Route::get('notifications/{notification}', function (DatabaseNotification $notification){
+        // abortmos a menos que el usuario conectado sea igual al usuario de la notificacion
+        // y para estar 100% seguro verificamos el tipo de notificacion
+        abort_unless($notification->notifiable_id == auth()->id() && $notification->notifiable_type == 'App\User', 404);
+        // markAsRead: marcmos una notificacion como leida
+        $notification->markAsRead();
+
+        // dependiendo del tipo de notificacion lo enviamos a una url
+        switch ($notification->type){
+            case 'App\Notifications\Follower':
+                return redirect('profile/'.$notification->data['follower_id']);
+        }
+    });
+
+
+    Route::get('profile/{user}', function (User $user){
+        dd($user);
+    });
 });
 
 Route::get('/', function () {
