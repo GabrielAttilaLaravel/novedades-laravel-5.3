@@ -17,6 +17,7 @@ use App\User;
 use App\Post;
 use App\Notifications\Follower;
 use App\DatabaseNotification;
+use Nexmo\Laravel\Facade\Nexmo;
 
 // usamos php artisan vendor:publish --tag=laravel-pagination
 // para poder extraer el codigo que personalizamos del vendor
@@ -87,7 +88,11 @@ Route::group(['middleware' => 'auth'], function (){
 });
 
 Route::get('/', function () {
-    return view('welcome');
+    Nexmo::message()->send([
+        'to' => '584128502368',
+        'from' => '584128502368',
+        'text' => 'Mensaje enviado con Nexmo'
+    ]);
 });
 
 Route::get('admin', function(){
