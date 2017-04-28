@@ -13,6 +13,8 @@
 
 
 use App\Notifications\PostComented;
+use App\Notifications\PostPublished;
+use App\SlackTeam;
 use App\User;
 use App\Post;
 use App\Notifications\Follower;
@@ -82,6 +84,14 @@ Route::group(['middleware' => 'auth'], function (){
         dd($user);
     });
 
+    Route::get('posts/publish/{post}', function (Post $post){
+      // Publish post here...
+
+        //
+        (new SlackTeam())->notify(new PostPublished($post));
+
+        return 'Done!';
+    });
     Route::get('posts/{post}', function (Post $post){
         dd($post);
     });

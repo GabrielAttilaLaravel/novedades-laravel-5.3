@@ -40,4 +40,8 @@ return [
         'secret' => env('908cdbd341868d73'),
         'sms_from' => '15556666666',
     ],
+
+    'slack' => [
+        'webhook' => env('SLACK_WEBHOOK')
+    ],
 ];
