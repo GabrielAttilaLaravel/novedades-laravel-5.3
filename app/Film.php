@@ -2,10 +2,15 @@
 
 namespace App;
 
+use Laravel\Scout\Searchable;
 use Illuminate\Database\Eloquent\Model;
 
 class Film extends Model
 {
+
+    // incluimos el trait de scout para su funcionamiento
+    use Searchable;
+
     protected $table = 'film';
 
     protected $primaryKey = 'film_id';

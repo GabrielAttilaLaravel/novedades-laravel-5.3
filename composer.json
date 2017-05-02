@@ -6,8 +6,10 @@
     "type": "project",
     "require": {
         "php": ">=5.6.4",
+        "algolia/algoliasearch-client-php": "^1.17",
         "guzzlehttp/guzzle": "^6.2",
         "laravel/framework": "5.3.*",
+        "laravel/scout": "2.*",
         "nexmo/client": "0.4.0",
         "nexmo/laravel": "0.4.0"
     },
