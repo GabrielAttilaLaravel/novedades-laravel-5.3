@@ -38,7 +38,7 @@
                                     <select name="featured_post_id" id="featured_post_id" class="form-control">
                                         <option value="">Please select a post</option>
                                         @foreach($posts as $post)
-                                            <option value="{{ $post->id }}">
+                                            <option value="{{ $post->id }}" @if($post->id == old('featured_post_id', $profile->featured_post_id)) selected @endif>
                                                 {{ $post->id == old('featured_post_id', $profile->featured_post_id) }}
                                                 {{ $post->title }} - ({{ $post->points }})
                                             </option>
@@ -51,7 +51,7 @@
                                         </span>
                                     @endif
                                 </div>
-                            </div>featured_post_id
+                            </div>
 
                             <div class="form-group{{ $errors->has('description') ? ' has-error': '' }}">
                                 <label for="description" class="col-md-4 control-label">Description</label>

@@ -36,13 +36,16 @@ class User extends Authenticatable
     public function profile()
     {
         // un usuario puede tener un perfil de usuario
-        return $this->hasOne(UserProfile::class);
+        // withDefault: si el usuario no tiene perfil laravel lo creara por defecto
+        return $this->hasOne(UserProfile::class)->withDefault(function ($profile){
+            $profile->nickname = 'guest'.rand(100, 999);
+        });
     }
 
-    public function getProfileAttribute()
+    /**public function getProfileAttribute()
     {
         return $this->profile()->firstOrNew([]);
-    }
+    }**/
 
     // optenemos el administrador del sistema
     public static function getAdmin()
