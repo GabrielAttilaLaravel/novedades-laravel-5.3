@@ -33,6 +33,14 @@ class User extends Authenticatable
         return $this->hasMany(Post::class);
     }
 
+    public function subscriptions()
+    {
+        // como la relacion no es la combinacion de ambos nombres ordenados alfabeitcamente colocamos el
+        // nombre de la tabla
+        return $this->belongsToMany(Post::class, 'subscriptions');
+    }
+
+
     public function profile()
     {
         // un usuario puede tener un perfil de usuario

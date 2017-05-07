@@ -34,6 +34,20 @@ Route::get('posts', function (){
     return view('posts', compact('posts'));
 });
 
+//
+Route::get('subscribe/{post}', function (Post $post){
+    // conectamos al uruaio con el id 1
+    auth()->loginUsingId(1);
+
+    $user = auth()->user();
+
+    $user->subscriptions()->toggle($post);
+
+
+    // imprimimos las subscriptiones del usuario
+    dd($user->subscriptions);
+});
+
 //creamos una ruta para simular la notificacion del usuario que va a seguir y el seguido
 Route::get('follow/{follower}/{followed}', function (User $follower, User $followed){
     // metodo send():
