@@ -3,6 +3,8 @@
 namespace App\Providers;
 
 use Illuminate\Pagination\LengthAwarePaginator;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Request;
 use Illuminate\Support\ServiceProvider;
 
@@ -19,6 +21,14 @@ class AppServiceProvider extends ServiceProvider
         if (Request::segment(1) != 'admin'){
             LengthAwarePaginator::defaultView('partials/default-pagination');
         }
+
+        // registramos las consutlas SQL que vamos a ejecutar
+        DB::listen(function ($query){
+            Log::info([
+                'sql' => $query->sql,
+                'bindings' => $query->bindings
+            ]);
+        });
     }
 
     /**

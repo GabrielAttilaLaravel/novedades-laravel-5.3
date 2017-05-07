@@ -24,7 +24,12 @@ use Nexmo\Laravel\Facade\Nexmo;
 // usamos php artisan vendor:publish --tag=laravel-pagination
 // para poder extraer el codigo que personalizamos del vendor
 Route::get('posts', function (){
-    $posts = Post::Paginate(5);
+    // usamos Eager Loading (se utiliza para resolver problemas de N+1) "with"
+    // Post::with('user') = traeme todos los post con sus autores unicamente con los campos id y name
+    $posts = Post::with('user:id,name')
+                ->select('id', 'title', 'user_id')
+                ->orderBy('title', 'ASC')
+                ->Paginate(15);
 
     return view('posts', compact('posts'));
 });
