@@ -12,9 +12,9 @@ class Post extends Model
     }
 
     // simulamos que el post tiene 5 suscriptores
-    public function getSubscribersAttribute()
+    public function subscribers()
     {
-        return User::take(5)->get();
+        return $this->belongsToMany(User::class, 'subscriptions');
     }
 
     public function getUrlAttribute()

@@ -19,7 +19,8 @@ $factory->define(App\User::class, function (Faker\Generator $faker) {
         'name' => $faker->name,
         'email' => $faker->unique()->safeEmail,
         'password' => $password ?: $password = bcrypt('secret'),
-        'remember_token' => str_random(10)
+        'remember_token' => str_random(10),
+        'points' => rand(0, 100),
     ];
 });
 
@@ -27,6 +28,9 @@ $factory->define(App\Post::class, function (Faker\Generator $faker) {
     return [
         'title' => $faker->name,
         'content' => $faker->paragraph(),
-        'points' => rand(0, 100)
+        'points' => rand(0, 100),
+        'user_id' => function(){
+            return factory(\App\User::class)->create()->id;
+        }
     ];
 });

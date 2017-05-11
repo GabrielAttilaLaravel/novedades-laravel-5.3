@@ -12,11 +12,11 @@
 */
 
 
-use App\Notifications\PostComented;
+use App\Mail\Welcome as WelcomeEmail;
+use App\Post;
 use App\Notifications\PostPublished;
 use App\SlackTeam;
 use App\User;
-use App\Post;
 use App\Notifications\Follower;
 use App\DatabaseNotification;
 use Nexmo\Laravel\Facade\Nexmo;
@@ -63,7 +63,7 @@ Route::get('comment/{post}', function (Post $post){
 
     // enviamos la notificacion ej: si tenemos los subscriptores del post le enviamos que hay un nuevo
     // comentario
-    Notification::send($post->subscribers, new PostComented($post));
+    Notification::send($post->subscribers, new \App\Notifications\PostComented($post));
 });
 
 Route::group(['middleware' => 'auth'], function (){
@@ -123,6 +123,25 @@ Route::get('/', function () {
         'text' => 'Mensaje enviado con Nexmo'
     ]);
 });
+
+Route::get('welcome', function (){
+    $user = auth()->user();
+    // 1 - to: pasamos el destinatario del mensaje
+    // 2 - send: pasamos la instancia del objeto Email anteriormente creada
+    Mail::to($user->email, $user->name)
+        ->cc('cc@example.com')
+        ->bcc('cc@example.com')
+        ->send(new WelcomeEmail($user));
+});
+/**
+Route::get('welcome', function (){
+    $user = auth()->user();
+
+    Mail::to($user->email, $user->name)
+        ->cc('cc@example.com')
+        ->bcc('cc@example.com')
+        ->send(new WelcomeEmail($user));
+});**/
 
 Route::get('admin', function(){
     return User::getAdmin();

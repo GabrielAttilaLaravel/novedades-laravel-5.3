@@ -14,7 +14,7 @@ class PostComented extends Notification
     /**
      * @var Post
      */
-    private $post;
+    public $post;
 
     /**
      * Create a new notification instance.
